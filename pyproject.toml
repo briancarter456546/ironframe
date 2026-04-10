@@ -57,11 +57,11 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/briancarteraus/ironframe"
-Documentation = "https://github.com/briancarteraus/ironframe/tree/main/docs"
-Repository = "https://github.com/briancarteraus/ironframe"
-Issues = "https://github.com/briancarteraus/ironframe/issues"
-Changelog = "https://github.com/briancarteraus/ironframe/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/briancarter456546/ironframe"
+Documentation = "https://github.com/briancarter456546/ironframe/tree/main/docs"
+Repository = "https://github.com/briancarter456546/ironframe"
+Issues = "https://github.com/briancarter456546/ironframe/issues"
+Changelog = "https://github.com/briancarter456546/ironframe/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ironframe"]

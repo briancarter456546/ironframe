@@ -40,5 +40,5 @@ Initial public release.
 
 - **Apache 2.0 core license** with explicit patent grant
 
-[Unreleased]: https://github.com/briancarteraus/ironframe/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/briancarteraus/ironframe/releases/tag/v0.1.0
+[Unreleased]: https://github.com/briancarter456546/ironframe/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/briancarter456546/ironframe/releases/tag/v0.1.0
