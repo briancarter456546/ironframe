@@ -1,0 +1,38 @@
+{
+  "component_id": 16,
+  "name": "I/O Schema Enforcement",
+  "version": "1.0",
+  "owns": "Typed boundary validation for skills, tools, agent outputs, and inter-agent messages",
+  "inputs": ["raw_payloads", "declared_contracts", "boundary_metadata"],
+  "outputs": ["valid_structured_payloads", "actionable_validation_errors", "drift_signals"],
+  "must_never": [
+    "Allow untyped payloads to cross governed boundaries silently",
+    "Coerce without logging",
+    "Produce generic errors instead of field-level diagnostics",
+    "Return valid=True for missing schema on governed boundaries",
+    "Allow silent coercion without audit record"
+  ],
+  "depends_on": [2, 4, 7, 8, 12, 14, 18],
+  "failure_modes": ["silent_coercion", "malformed_output_propagation", "broken_retry_diagnostics", "schema_drift"],
+  "code_modules": [
+    "ironframe/io_schema/errors_v1_0.py",
+    "ironframe/io_schema/coercion_v1_0.py",
+    "ironframe/io_schema/registry_v1_0.py",
+    "ironframe/io_schema/validator_v1_0.py",
+    "ironframe/io_schema/boundaries_v1_0.py",
+    "ironframe/io_schema/drift_v1_0.py"
+  ],
+  "schema_files": [
+    "ironframe/schemas/mal.complete.output_v1.0.json",
+    "ironframe/schemas/mal.stream.chunk_v1.0.json",
+    "ironframe/schemas/mal.stream.final_v1.0.json",
+    "ironframe/schemas/sae.judge.evaluate.output_v1.0.json",
+    "ironframe/schemas/sae.cross_model.verify.output_v1.0.json",
+    "ironframe/schemas/hooks.result_v1.0.json",
+    "ironframe/schemas/audit.event_v1.0.json",
+    "ironframe/schemas/skills.definition_v1.0.json"
+  ],
+  "rtm_requirements": ["IF-REQ-006"],
+  "status": "implemented",
+  "notes": "8 boundary schemas, 3 coercion modes, field-level diagnostics, drift detection. 7 corrections from Brian applied: governed boundary failure, rich metadata, unknown fields explicit, any flagged, version compat, richer recovery context, audit outcome types."
+}

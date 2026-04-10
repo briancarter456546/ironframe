@@ -1,0 +1,25 @@
+{
+  "component_id": 5,
+  "name": "Self-Audit Engine",
+  "version": "1.0",
+  "owns": "Confidence scoring, self-consistency checks, reasoning verification, trust scoring",
+  "inputs": ["model_outputs", "provenance", "runtime_context"],
+  "outputs": ["confidence_class", "anomaly_cues", "escalation_recommendation"],
+  "must_never": [
+    "Substitute for schema enforcement or conformance checking"
+  ],
+  "depends_on": [7, 10, 17, 18],
+  "failure_modes": ["false_confidence", "missed_hallucination", "over_triggered_escalation"],
+  "code_modules": [
+    "ironframe/sae/confidence_v1_0.py",
+    "ironframe/sae/judge_v1_0.py",
+    "ironframe/sae/cross_model_v1_0.py",
+    "ironframe/sae/tiers_v1_0.py",
+    "ironframe/logic/toulmin_v1_0.py",
+    "ironframe/logic/cqot_v1_0.py",
+    "ironframe/logic/fallacy_v1_0.py"
+  ],
+  "rtm_requirements": ["IF-REQ-002", "IF-REQ-007"],
+  "status": "implemented",
+  "notes": "5-tier verification (0=free logic, 1=judge, 2=self-consistency, 3=cross-model, 4=symbolic placeholder). Logic skills: Toulmin, CQoT (19 questions), 30 fallacies. KB grounding dependency (10) not yet enforced."
+}

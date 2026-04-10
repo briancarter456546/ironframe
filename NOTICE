@@ -1,0 +1,11 @@
+Iron Frame
+Copyright 2026 Brian Carter
+
+This product includes software developed by Brian Carter.
+
+Iron Frame is an infrastructure reliability layer for LLM-powered systems.
+The core framework is licensed under the Apache License, Version 2.0.
+
+Certain compliance adapters located in src/ironframe/compliance/adapters/
+are licensed separately under the PolyForm Noncommercial License 1.0.0.
+See src/ironframe/compliance/adapters/LICENSE_COMMERCIAL for details.

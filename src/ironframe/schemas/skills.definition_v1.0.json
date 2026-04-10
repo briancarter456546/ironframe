@@ -1,0 +1,17 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "skills.definition",
+  "version": "1.0",
+  "description": "Skill definition parsed from skill.md frontmatter",
+  "fields": {
+    "name": {"type": "string", "required": true, "description": "Skill name (unique identifier)"},
+    "description": {"type": "string", "required": true, "description": "What the skill does"},
+    "user_invocable": {"type": "bool", "required": false, "default": false},
+    "version": {"type": "string", "required": false, "default": "1.0"},
+    "tier": {"type": "enum", "required": false, "enum_values": ["core", "domain", "protocol"], "default": "domain"},
+    "requires": {"type": "list", "required": false, "default": [], "description": "Skill dependencies", "items_type": "string"},
+    "phases": {"type": "list", "required": false, "default": [], "description": "Phase declarations for phase gate", "items_type": "dict"},
+    "path": {"type": "string", "required": false, "default": "", "description": "Path to skill.md file"}
+  },
+  "required": ["name", "description"]
+}

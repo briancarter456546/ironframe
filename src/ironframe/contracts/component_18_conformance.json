@@ -1,0 +1,70 @@
+{
+  "component_id": "C18",
+  "name": "Spec Conformance & Drift Engine",
+  "version": "1.0",
+  "purpose": "Detects and reports divergence between spec, implementation, and runtime behavior.",
+  "requires_components": ["C7", "C13", "C14", "C17"],
+  "observes_components": ["C7", "C12", "C13", "C14", "C17"],
+  "owned_requirements": ["IF-REQ-005"],
+  "invariants": [
+    {
+      "id": "INV-C18-RTM-001",
+      "description": "No accepted requirement may have zero implementation or verification artifacts",
+      "applies_to": "rtm_v1_0.py:RTMEntry.is_complete",
+      "severity": "warning",
+      "check_expression": "len(implementation_artifacts) > 0 AND len(verification_artifacts) > 0",
+      "required_evidence": "RTM coverage report"
+    },
+    {
+      "id": "INV-C18-ARCH-001",
+      "description": "Architecture boundary rules must be enforced at CI time",
+      "applies_to": "static_checker_v1_0.py",
+      "severity": "critical",
+      "check_expression": "static_check.status != FAIL",
+      "required_evidence": "StaticConformanceReport"
+    },
+    {
+      "id": "INV-C18-DRIFT-001",
+      "description": "Every runtime drift event must be logged with evidence_trace_ids",
+      "applies_to": "runtime_monitor_v1_0.py:DriftEvent",
+      "severity": "critical",
+      "check_expression": "len(evidence_trace_ids) > 0 for every drift event",
+      "required_evidence": "DriftEvent records in audit log"
+    },
+    {
+      "id": "INV-C18-BASELINE-001",
+      "description": "A baseline must exist before any drift diff can be produced",
+      "applies_to": "drift_reporter_v1_0.py:DriftReporter.diff_since_baseline",
+      "severity": "warning",
+      "check_expression": "baseline_id exists in baselines registry",
+      "required_evidence": "Baseline snapshot"
+    }
+  ],
+  "emitted_events": ["DriftEvent", "StaticConformanceReport"],
+  "code_modules": [
+    "ironframe/conformance/rtm_v1_0.py",
+    "ironframe/conformance/static_checker_v1_0.py",
+    "ironframe/conformance/runtime_monitor_v1_0.py",
+    "ironframe/conformance/drift_reporter_v1_0.py",
+    "ironframe/conformance/engine_v1_0.py"
+  ],
+  "verification": {
+    "required_unit_tests": [
+      "RTM entry validation",
+      "Static checker with known violations",
+      "Monitor evaluates INV-C14-TRUST-001 correctly",
+      "Drift reporter produces correct diff"
+    ],
+    "required_eval_scenarios": [
+      "c18-static-clean",
+      "c18-trust-drift",
+      "c18-rtm-gap"
+    ]
+  },
+  "deferred_scope": [
+    "Cross-release compliance audit UI",
+    "Automated remediation playbooks",
+    "External regulation change detection",
+    "Integration with Drata/Vanta for evidence export"
+  ]
+}

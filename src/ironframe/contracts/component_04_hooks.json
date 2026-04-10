@@ -1,0 +1,19 @@
+{
+  "component_id": 4,
+  "name": "Hook Engine",
+  "version": "1.0",
+  "owns": "Pre/post execution enforcement, completion gates, session start/end hooks",
+  "inputs": ["state_context", "event_triggers", "component_policies"],
+  "outputs": ["pass_fail_escalate_decisions", "hook_evidence"],
+  "must_never": [
+    "Execute only inside prompt context"
+  ],
+  "depends_on": [3, 7, 11, 16, 17, 18],
+  "failure_modes": ["hook_bypass", "misordered_hooks", "duplicate_hooks"],
+  "code_modules": [
+    "ironframe/hooks/engine_v1_0.py"
+  ],
+  "rtm_requirements": ["IF-REQ-001", "IF-REQ-003"],
+  "status": "implemented",
+  "notes": "Python-native hook engine for API workflows. Bash hooks remain for Claude Code sessions. Composable, deterministic order, blocking/non-blocking."
+}

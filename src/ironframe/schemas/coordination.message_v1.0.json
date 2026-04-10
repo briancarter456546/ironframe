@@ -1,0 +1,29 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "coordination.message",
+  "version": "1.0",
+  "description": "Strict typed envelope for all inter-agent coordination messages. Receiving agent effective tier must be computed in code as min(receiver_declared_tier, sender_trust_tier).",
+  "fields": {
+    "schema_version": {"type": "string", "required": true, "default": "1.0"},
+    "message_id": {"type": "string", "required": true, "description": "UUID for this message"},
+    "conversation_id": {"type": "string", "required": true, "description": "Session/conversation scope"},
+    "parent_task_id": {"type": "string", "required": true, "description": "Root task this belongs to"},
+    "subtask_id": {"type": "string", "required": true, "description": "Specific sub-task context"},
+    "type": {"type": "enum", "required": true, "enum_values": ["ASSIGNMENT", "RESULT", "QUERY", "ESCALATION", "HEARTBEAT", "HALT"], "description": "Message type"},
+    "sender_agent_id": {"type": "string", "required": true},
+    "receiver_agent_id": {"type": "string", "required": true, "description": "Agent ID or BROADCAST"},
+    "sender_role": {"type": "string", "required": true, "description": "Declared role of sender"},
+    "sender_trust_tier": {"type": "int", "required": true, "constraints": {"min": 0, "max": 4}},
+    "receiver_declared_tier": {"type": "int", "required": true, "constraints": {"min": 0, "max": 4}},
+    "timestamp": {"type": "string", "required": true, "description": "ISO 8601 UTC"},
+    "payload": {"type": "dict", "required": true, "description": "Typed payload per message type"},
+    "requires_ack": {"type": "bool", "required": true, "description": "True if orchestrator must acknowledge"},
+    "dependency_refs": {"type": "list", "required": false, "default": [], "items_type": "string", "description": "Task IDs this message depends on"},
+    "reply_to_message_id": {"type": "string", "required": false, "default": ""},
+    "assignment_timestamp": {"type": "string", "required": false, "default": "", "description": "When the sub-task was originally assigned"},
+    "ttl": {"type": "int", "required": false, "default": 300, "constraints": {"min": 1}, "description": "Time-to-live in seconds"},
+    "idempotency_key": {"type": "string", "required": false, "default": "", "description": "For dedup of retried messages"},
+    "provenance": {"type": "dict", "required": true, "description": "C17 OutputProvenance: provenance_id, source_component=C17, trust_tier, confidence, signed"}
+  },
+  "required": ["schema_version", "message_id", "conversation_id", "parent_task_id", "subtask_id", "type", "sender_agent_id", "receiver_agent_id", "sender_role", "sender_trust_tier", "receiver_declared_tier", "timestamp", "payload", "requires_ack", "provenance"]
+}

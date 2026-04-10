@@ -1,0 +1,15 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "tool.call.result",
+  "version": "1.0",
+  "description": "Generic result envelope for governed tool calls.",
+  "fields": {
+    "tool_id": {"type": "string", "required": true, "description": "Tool that produced this result"},
+    "success": {"type": "bool", "required": true, "description": "Whether the tool call succeeded"},
+    "result": {"type": "any", "required": false, "description": "Tool-specific result payload (validated by per-tool response schema)"},
+    "error": {"type": "string", "required": false, "default": "", "description": "Error message if failed"},
+    "duration_ms": {"type": "float", "required": false, "default": 0.0, "constraints": {"min": 0.0}},
+    "cost_usd": {"type": "float", "required": false, "default": 0.0, "constraints": {"min": 0.0}}
+  },
+  "required": ["tool_id", "success"]
+}

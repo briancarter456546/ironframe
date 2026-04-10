@@ -1,0 +1,28 @@
+{
+  "component_id": 13,
+  "name": "Eval & Regression Framework",
+  "version": "1.0",
+  "owns": "Benchmark scenarios, regression gates, production scoring feedback loops",
+  "inputs": ["specs", "workflows", "skills", "tool_contracts", "model_versions"],
+  "outputs": ["pass_fail_reports", "regressions", "baseline_updates", "gate_results"],
+  "must_never": [
+    "Evaluate only happy-path outputs",
+    "Run evals against live production credentials or state",
+    "Accept a scenario without RTM linkage as traced",
+    "Score a governance-degraded pass as a clean pass",
+    "Let compliance-domain scenario failures pass silently"
+  ],
+  "depends_on": [7, 16, 18],
+  "failure_modes": ["blind_spots", "stale_test_sets", "non_actionable_evals", "governance_signal_blindness"],
+  "code_modules": [
+    "ironframe/eval/scenario_v1_0.py",
+    "ironframe/eval/methods_v1_0.py",
+    "ironframe/eval/gates_v1_0.py",
+    "ironframe/eval/isolation_v1_0.py",
+    "ironframe/eval/feedback_v1_0.py",
+    "ironframe/eval/runner_v1_0.py"
+  ],
+  "rtm_requirements": [],
+  "status": "implemented",
+  "notes": "Brian's additions: C10/C17 governance signals as eval signals (effective_passed requires governance_clean). RTM coverage metadata per eval suite (components, requirements, metrics). Compliance gates require 100% pass. Production failures become regression scenarios."
+}

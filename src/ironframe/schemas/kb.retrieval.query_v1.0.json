@@ -1,0 +1,17 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "kb.retrieval.query",
+  "version": "1.0",
+  "description": "Query input for KB retrieval operations",
+  "fields": {
+    "query": {"type": "string", "required": true, "description": "Search query text"},
+    "mode": {"type": "enum", "required": false, "enum_values": ["semantic", "graph", "hybrid"], "default": "hybrid"},
+    "top_k": {"type": "int", "required": false, "default": 10, "constraints": {"min": 1, "max": 100}},
+    "governed": {"type": "bool", "required": false, "default": false, "description": "If true, restrict to canonical + authoritative_domain"},
+    "start_entity_id": {"type": "string", "required": false, "default": "", "description": "Starting entity for graph traversal"},
+    "rel_type": {"type": "string", "required": false, "default": ""},
+    "max_hops": {"type": "int", "required": false, "default": 3, "constraints": {"min": 1, "max": 10}},
+    "session_id": {"type": "string", "required": false, "default": ""}
+  },
+  "required": ["query"]
+}

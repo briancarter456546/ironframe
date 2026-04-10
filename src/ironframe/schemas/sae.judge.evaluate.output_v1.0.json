@@ -1,0 +1,18 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "sae.judge.evaluate.output",
+  "version": "1.0",
+  "description": "Output from Judge.evaluate() -- per-claim factual verdict",
+  "fields": {
+    "approved": {"type": "bool", "required": true, "description": "Whether the output passed judge review"},
+    "claims": {"type": "list", "required": false, "default": [], "description": "Per-claim assessments", "items_type": "dict"},
+    "logic_sound": {"type": "bool", "required": false, "default": false, "description": "Whether reasoning logic is sound"},
+    "task_aligned": {"type": "bool", "required": false, "default": true, "description": "Whether output addresses the task"},
+    "issues": {"type": "list", "required": false, "default": [], "description": "List of identified issues", "items_type": "string"},
+    "summary": {"type": "string", "required": false, "default": "", "description": "One-line verdict"},
+    "model_used": {"type": "string", "required": false, "description": "Model used for judging"},
+    "cost_usd": {"type": "float", "required": false, "default": 0.0, "constraints": {"min": 0.0}},
+    "raw_response": {"type": "string", "required": false, "description": "Raw response on parse failure"}
+  },
+  "required": ["approved"]
+}

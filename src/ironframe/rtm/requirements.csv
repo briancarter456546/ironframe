@@ -1,0 +1,11 @@
+Req ID,Promise,Statement,Components,Code Modules,Status,Notes
+IF-REQ-001,Trustworthy,All critical enforcement must run outside the model context,4,ironframe/hooks/engine_v1_0.py,implemented,Hook engine built. Bash hooks also exist for Claude Code sessions.
+IF-REQ-002,Accurate,Domain-specific answers must use KB or graph grounding,10,,not_started,Component 10 (KB Grounding Layer) not yet built. Phase 2 priority 5.
+IF-REQ-003,Reliable,No completion without completion gate,4,"ironframe/hooks/engine_v1_0.py, ironframe/state/phase_v1_0.py",implemented,Hook engine supports completion_gate event. Phase gate enforces sequencing.
+IF-REQ-004,Trustworthy,Agents are untrusted by default and minimally privileged,17,,not_started,Component 17 (Agent Trust & Containment) not yet built. Phase 2 priority 6.
+IF-REQ-005,Diligent,Every governed task produces immutable audit evidence,7,"ironframe/audit/schema_v1_0.py, ironframe/audit/logger_v1_0.py, ironframe/audit/stream_logger_v1_0.py",implemented,Audit log built and tested. Compliance-ready schema. Needs provenance expansion.
+IF-REQ-006,Reliable,Tool calls must pass schema and governance checks,"12, 16",,not_started,Components 12 (Tool Governance) and 16 (Schema Enforcement) not yet built. Phase 2 priorities 1-2.
+IF-REQ-007,Accurate,Model outputs conflicting with KB truth must trigger arbitration,"10, 18",,not_started,Components 10 and 18 not yet built.
+IF-REQ-008,Trustworthy,Prompt injection and hostile inputs must be filtered before execution,11,,not_started,Component 11 (Security / Injection Defense) not yet built. Phase 2 priority 3.
+IF-REQ-009,Reliable,Runtime behavior must match declared workflow contracts,18,,not_started,Component 18 (Spec Conformance & Drift Engine) not yet built. Phase 2 priority 9.
+IF-REQ-010,Diligent,"Every active skill, tool, and control must trace to a requirement",18,,not_started,RTM created (this file). Component 18 will read it for conformance checks.

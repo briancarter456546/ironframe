@@ -1,0 +1,31 @@
+{
+  "component_id": 9,
+  "name": "Context Budget Manager",
+  "version": "1.0",
+  "owns": "Context allocation, compression, pruning, stable prefixes",
+  "inputs": ["token_budget", "session_history", "active_skills", "retrieved_kb_context"],
+  "outputs": ["final_model_context_package", "budget_telemetry"],
+  "must_never": [
+    "Compress away critical policy or provenance context",
+    "Compress CONSTITUTIONAL, CONTRACT, or TOOL_DEFINITIONS zones",
+    "Silently truncate CURRENT_TASK (must escalate)",
+    "Strip trust tier metadata during compression",
+    "Reorder zone sequence"
+  ],
+  "depends_on": [1, 2, 5, 10, 11, 12, 15, 16, 18],
+  "failure_modes": ["context_rot", "over_compression", "token_waste", "trust_metadata_loss"],
+  "code_modules": [
+    "ironframe/context/zones_v1_0.py",
+    "ironframe/context/budget_v1_0.py",
+    "ironframe/context/compression_v1_0.py",
+    "ironframe/context/trust_preservation_v1_0.py",
+    "ironframe/context/rot_detector_v1_0.py",
+    "ironframe/context/skill_tier_v1_0.py",
+    "ironframe/context/telemetry_v1_0.py",
+    "ironframe/context/manager_v1_0.py"
+  ],
+  "schema_files": ["ironframe/schemas/context.budget.output_v1.0.json"],
+  "rtm_requirements": [],
+  "status": "implemented",
+  "notes": "Fixed zone sequence (stable prefix). 3 protection zones never compressed. Dual-zone overflow: history first, then retrieved. Trust preservation invariant verified on every assembly. Context rot detection with 75% threshold escalation."
+}

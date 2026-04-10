@@ -1,0 +1,12 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "mal.stream.chunk",
+  "version": "1.0",
+  "description": "Individual chunk from IronFrameClient.stream()",
+  "fields": {
+    "type": {"type": "enum", "required": true, "enum_values": ["chunk"], "description": "Always 'chunk' for streaming chunks"},
+    "text": {"type": "string", "required": true, "description": "Text content of this chunk"},
+    "tokens": {"type": "int", "required": false, "default": 0, "constraints": {"min": 0}}
+  },
+  "required": ["type", "text"]
+}

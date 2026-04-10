@@ -1,0 +1,14 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "hooks.result",
+  "version": "1.0",
+  "description": "HookResult from a single hook execution",
+  "fields": {
+    "allow": {"type": "bool", "required": true, "description": "Whether the hook allows the action to proceed"},
+    "message": {"type": "string", "required": false, "default": "", "description": "Explanation of the decision"},
+    "metadata": {"type": "dict", "required": false, "default": {}, "description": "Arbitrary hook-specific metadata"},
+    "hook_name": {"type": "string", "required": false, "default": "", "description": "Name of the hook that produced this result"},
+    "duration_ms": {"type": "float", "required": false, "default": 0.0, "constraints": {"min": 0.0}, "description": "Execution time in milliseconds"}
+  },
+  "required": ["allow"]
+}

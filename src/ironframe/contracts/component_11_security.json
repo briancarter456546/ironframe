@@ -1,0 +1,28 @@
+{
+  "component_id": 11,
+  "name": "Security / Injection Defense",
+  "version": "1.0",
+  "owns": "Input threat filtering, trust-tiering, action gating for external content",
+  "inputs": ["user_input", "tool_output", "retrieved_content", "external_documents", "agent_messages"],
+  "outputs": ["sanitized_content", "threat_classification", "blocked_actions", "gate_decisions"],
+  "must_never": [
+    "Assume content is safe because it is internal-looking",
+    "Run exclusively inside prompt text",
+    "Allow EXTERNAL tier content to upgrade its own trust tier",
+    "Silently drop inputs (blocked inputs are logged, not discarded)",
+    "Prevent audit log write even if blocking the input"
+  ],
+  "depends_on": [4, 7, 12, 16, 17],
+  "failure_modes": ["prompt_injection_success", "over_blocking", "trust_tier_errors", "provenance_gap"],
+  "code_modules": [
+    "ironframe/security/trust_v1_0.py",
+    "ironframe/security/detection_v1_0.py",
+    "ironframe/security/gate_v1_0.py",
+    "ironframe/security/sanitize_v1_0.py",
+    "ironframe/security/threat_log_v1_0.py",
+    "ironframe/security/engine_v1_0.py"
+  ],
+  "rtm_requirements": ["IF-REQ-008"],
+  "status": "implemented",
+  "notes": "Action gate is provenance-based structural barrier, not content filter. Reads tool risk from C12 registry (no duplication). C17 stub: inter-agent messages default EXTERNAL. Semantic detection deferred (needs embedding model)."
+}

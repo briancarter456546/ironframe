@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-04-05",
+  "source": "iron_frame_executable_spec_v1",
+
+  "entity_types": {
+    "Component": {
+      "description": "An Iron Frame infrastructure component (1-18)",
+      "required_fields": ["id", "name", "purpose"],
+      "optional_fields": ["version", "status", "code_modules"]
+    },
+    "Requirement": {
+      "description": "A traceable requirement from the RTM",
+      "required_fields": ["id", "promise", "statement", "components"],
+      "optional_fields": ["status", "tests", "hooks", "audit_evidence"]
+    },
+    "Skill": {
+      "description": "A bounded capability module with contracts",
+      "required_fields": ["name", "version", "tier"],
+      "optional_fields": ["requires", "phases", "contract_path"]
+    },
+    "Hook": {
+      "description": "An external deterministic enforcement point",
+      "required_fields": ["name", "event", "blocking"],
+      "optional_fields": ["component", "description", "priority"]
+    },
+    "WorkflowContract": {
+      "description": "Declared sequence of valid phases for a task type",
+      "required_fields": ["name", "phases"],
+      "optional_fields": ["skill", "completion_gate_required"]
+    },
+    "Tool": {
+      "description": "An external tool or integration governed by Component 12",
+      "required_fields": ["name", "version", "schema"],
+      "optional_fields": ["auth_type", "rate_limit", "owner_component"]
+    },
+    "ComplianceRule": {
+      "description": "A regulatory or protocol requirement",
+      "required_fields": ["id", "protocol", "statement"],
+      "optional_fields": ["retention_class", "min_verification_tier"]
+    },
+    "TestCase": {
+      "description": "A verification test linked to requirements",
+      "required_fields": ["id", "requirement_id", "description"],
+      "optional_fields": ["type", "status", "last_run"]
+    },
+    "DriftEvent": {
+      "description": "A detected divergence between spec and runtime behavior",
+      "required_fields": ["id", "timestamp", "drift_type", "component"],
+      "optional_fields": ["severity", "resolution", "escalation_policy"]
+    },
+    "AgentType": {
+      "description": "A class of agent with defined role and capabilities",
+      "required_fields": ["name", "role", "autonomy_tier"],
+      "optional_fields": ["permissions", "containment_policy"]
+    },
+    "AutonomyTier": {
+      "description": "Level of action authority earned through verified behavior",
+      "required_fields": ["level", "name", "permissions"],
+      "optional_fields": ["promotion_criteria", "demotion_triggers"]
+    },
+    "ProvenanceRecord": {
+      "description": "Trace of where a claim or output came from",
+      "required_fields": ["id", "claim", "sources"],
+      "optional_fields": ["timestamp", "agent", "confidence", "kb_entities"]
+    },
+    "DomainStandard": {
+      "description": "An authoritative domain-specific reference or rule",
+      "required_fields": ["id", "domain", "statement"],
+      "optional_fields": ["source", "freshness_date", "review_date"]
+    },
+    "Insight": {
+      "description": "A generated analytical finding (non-authoritative until reviewed)",
+      "required_fields": ["id", "claim", "source_type"],
+      "optional_fields": ["confidence", "review_status", "derived_from"]
+    },
+    "SourceDocument": {
+      "description": "An ingested document that serves as evidence or reference",
+      "required_fields": ["id", "title", "source_class"],
+      "optional_fields": ["path", "ingested_at", "freshness_date"]
+    }
+  },
+
+  "relationship_types": {
+    "SATISFIES": {
+      "from": "Component",
+      "to": "Requirement",
+      "description": "Component satisfies this requirement"
+    },
+    "IMPLEMENTED_BY": {
+      "from": "Requirement",
+      "to": "CodeModule",
+      "description": "Requirement is implemented by this code module"
+    },
+    "VERIFIED_BY": {
+      "from": "Requirement",
+      "to": "TestCase",
+      "description": "Requirement is verified by this test"
+    },
+    "ENFORCED_BY": {
+      "from": "Requirement",
+      "to": "Hook",
+      "description": "Requirement is enforced by this hook"
+    },
+    "USES": {
+      "from": "Skill",
+      "to": "Tool",
+      "description": "Skill uses this tool"
+    },
+    "REQUIRES": {
+      "from": "Skill",
+      "to": "WorkflowContract",
+      "description": "Skill requires this workflow contract"
+    },
+    "DEPENDS_ON": {
+      "from": "Component",
+      "to": "Component",
+      "description": "Component depends on another component"
+    },
+    "MAPS_TO": {
+      "from": "Requirement",
+      "to": "ComplianceRule",
+      "description": "Requirement maps to a compliance rule"
+    },
+    "DERIVED_FROM": {
+      "from": "Insight",
+      "to": "SourceDocument",
+      "description": "Insight was derived from this source"
+    },
+    "CONTRADICTS": {
+      "from": "ProvenanceRecord",
+      "to": "DomainStandard",
+      "description": "Output claim contradicts authoritative KB entity"
+    },
+    "PRODUCED_BY": {
+      "from": "ProvenanceRecord",
+      "to": "AgentType",
+      "description": "Provenance record was produced by this agent type"
+    },
+    "GOVERNS": {
+      "from": "ComplianceRule",
+      "to": "WorkflowContract",
+      "description": "Compliance rule governs this workflow"
+    },
+    "TRIGGERS": {
+      "from": "DriftEvent",
+      "to": "EscalationPolicy",
+      "description": "Drift event triggers this escalation"
+    }
+  },
+
+  "source_classes": {
+    "canonical": {
+      "description": "Constitution, glossary, component contracts, RTM, ontology",
+      "write_permission": "human_approved_only",
+      "freshness_rule": "Must update with any architecture change",
+      "stale_action": "Block conformance pass"
+    },
+    "authoritative_domain": {
+      "description": "Validated internal standards, approved regulatory materials, controlled operating docs",
+      "write_permission": "human_approved_or_policy_approved_ingestion",
+      "freshness_rule": "Review on business or regime change",
+      "stale_action": "Apply confidence penalty"
+    },
+    "analytical": {
+      "description": "Generated insights, summaries, pattern detections, draft entities",
+      "write_permission": "machine_proposed_human_reviewed",
+      "freshness_rule": "Continuous",
+      "stale_action": "Do not block, mark non-authoritative"
+    },
+    "ephemeral": {
+      "description": "Session-specific notes and temporary analysis",
+      "write_permission": "session_scoped_auto_expiring",
+      "freshness_rule": "Session-scoped",
+      "stale_action": "Auto-expire"
+    }
+  },
+
+  "freshness_policy": [
+    {
+      "source_class": "canonical",
+      "freshness_rule": "Must update with any architecture change",
+      "stale_action": "Block conformance pass"
+    },
+    {
+      "source_class": "compliance",
+      "freshness_rule": "Review quarterly or on rule change",
+      "stale_action": "Mark outputs review-required"
+    },
+    {
+      "source_class": "authoritative_domain",
+      "freshness_rule": "Review on business or regime change",
+      "stale_action": "Apply confidence penalty"
+    },
+    {
+      "source_class": "analytical",
+      "freshness_rule": "Continuous",
+      "stale_action": "Do not block, but mark non-authoritative"
+    }
+  ]
+}

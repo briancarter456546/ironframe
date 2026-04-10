@@ -1,0 +1,18 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "mal.complete.output",
+  "version": "1.0",
+  "description": "Output payload from IronFrameClient.complete()",
+  "fields": {
+    "text": {"type": "string", "required": true, "description": "The model's text response"},
+    "model": {"type": "string", "required": true, "description": "Model ID that produced this response"},
+    "provider": {"type": "string", "required": true, "description": "Provider name (anthropic, perplexity, openai)"},
+    "tokens_in": {"type": "int", "required": false, "default": 0, "constraints": {"min": 0}},
+    "tokens_out": {"type": "int", "required": false, "default": 0, "constraints": {"min": 0}},
+    "cost_usd": {"type": "float", "required": true, "constraints": {"min": 0.0}, "description": "Cost in USD"},
+    "stop_reason": {"type": "string", "required": false, "description": "Why generation stopped"},
+    "preference": {"type": "string", "required": false, "description": "Capability preference used for routing"},
+    "session_id": {"type": "string", "required": false, "description": "Session ID for tracking"}
+  },
+  "required": ["text", "model", "provider", "cost_usd"]
+}

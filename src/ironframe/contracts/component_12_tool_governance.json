@@ -1,0 +1,33 @@
+{
+  "component_id": 12,
+  "name": "Tool / Integration Governance",
+  "version": "1.0",
+  "owns": "Tool registry, auth lifecycle, rate limits, resource locks, versioning",
+  "inputs": ["tool_call_request", "agent_identity", "session_policy"],
+  "outputs": ["governed_execution_or_denial", "version_events", "lock_state"],
+  "must_never": [
+    "Expose raw credentials to any agent, model, or log payload",
+    "Execute unregistered tools",
+    "Skip contract validation even for internal tools",
+    "Leave orphaned locks on failure",
+    "Let audit events contain credential values"
+  ],
+  "depends_on": [7, 16, 17, 18],
+  "failure_modes": ["token_leaks", "lock_conflicts", "tool_schema_drift", "retry_storms", "orphaned_locks"],
+  "code_modules": [
+    "ironframe/tool_governance/registry_v1_0.py",
+    "ironframe/tool_governance/auth_v1_0.py",
+    "ironframe/tool_governance/contract_v1_0.py",
+    "ironframe/tool_governance/locks_v1_0.py",
+    "ironframe/tool_governance/rate_limit_v1_0.py",
+    "ironframe/tool_governance/versioning_v1_0.py",
+    "ironframe/tool_governance/governor_v1_0.py"
+  ],
+  "schema_files": [
+    "ironframe/schemas/tool.call.envelope_v1.0.json",
+    "ironframe/schemas/tool.call.result_v1.0.json"
+  ],
+  "rtm_requirements": ["IF-REQ-006"],
+  "status": "implemented",
+  "notes": "8 corrections from Brian applied: two-layer schemas, expanded auth model, explicit governed/blocking, execution-context credentials, lock ownership metadata, rate limit windows, phase-specific audit events, risk mismatch behavior."
+}

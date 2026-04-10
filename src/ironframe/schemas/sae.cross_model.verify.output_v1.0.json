@@ -1,0 +1,16 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "sae.cross_model.verify.output",
+  "version": "1.0",
+  "description": "Output from CrossModelVerifier.verify() -- per-claim cross-model verdict",
+  "fields": {
+    "claims": {"type": "list", "required": true, "description": "Per-claim verification results", "items_type": "dict"},
+    "overall_reliable": {"type": "bool", "required": true, "description": "True if no claims contradicted"},
+    "summary": {"type": "string", "required": false, "default": "", "description": "One-line assessment"},
+    "model_used": {"type": "string", "required": false, "description": "Verification model used"},
+    "cost_usd": {"type": "float", "required": false, "default": 0.0, "constraints": {"min": 0.0}},
+    "degraded": {"type": "bool", "required": false, "default": false, "description": "True if verification was unavailable"},
+    "raw_response": {"type": "string", "required": false, "description": "Raw response on parse failure"}
+  },
+  "required": ["claims", "overall_reliable"]
+}

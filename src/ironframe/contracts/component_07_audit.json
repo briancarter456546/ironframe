@@ -1,0 +1,25 @@
+{
+  "component_id": 7,
+  "name": "Immutable Audit Log",
+  "version": "1.0",
+  "owns": "Append-only event evidence, data lineage, execution history",
+  "inputs": ["all_major_events", "outputs", "validation_outcomes", "identities", "drift_events"],
+  "outputs": ["immutable_records", "forensic_snapshots", "compliance_evidence"],
+  "must_never": [
+    "Allow mutable or post-hoc rewritten records"
+  ],
+  "depends_on": [],
+  "failure_modes": ["missing_events", "broken_ordering", "partial_lineage"],
+  "code_modules": [
+    "ironframe/audit/schema_v1_0.py",
+    "ironframe/audit/logger_v1_0.py",
+    "ironframe/audit/stream_logger_v1_0.py"
+  ],
+  "rtm_requirements": ["IF-REQ-005"],
+  "status": "implemented",
+  "notes": "Schema covers HIPAA/FINRA/SOC2 union. JSONL backend. Stream logger uses open/close pattern. NEEDS PROVENANCE EXPANSION per ifqs.txt direction.",
+  "pending_changes": [
+    "Expand provenance fields in AuditEvent schema",
+    "Add provenance attachment to all audit writes"
+  ]
+}

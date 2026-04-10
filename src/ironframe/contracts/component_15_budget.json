@@ -1,0 +1,26 @@
+{
+  "component_id": "C15",
+  "name": "Cost / Latency Budget Manager",
+  "version": "1.0",
+  "purpose": "Task budgets, SLA enforcement, cost routing signals, latency telemetry. Makes reliability overhead visible.",
+  "requires_components": ["C1", "C7", "C9", "C12", "C13"],
+  "owned_requirements": ["IF-REQ-009", "IF-REQ-010"],
+  "must_never": [
+    "Let enforcement costs remain invisible",
+    "Silently skip controls to save cost without logging degradation",
+    "Allow hard budget limits to be overridden by model reasoning"
+  ],
+  "depends_on": [1, 7, 9, 12, 13],
+  "failure_modes": ["cost_blowouts", "timeout_cascades", "wrong_model_tier_selection", "invisible_overhead"],
+  "code_modules": [
+    "ironframe/budget/profiles_v1_0.py",
+    "ironframe/budget/ledger_v1_0.py",
+    "ironframe/budget/sla_v1_0.py",
+    "ironframe/budget/routing_v1_0.py",
+    "ironframe/budget/telemetry_v1_0.py",
+    "ironframe/budget/manager_v1_0.py"
+  ],
+  "rtm_requirements": ["IF-REQ-009", "IF-REQ-010"],
+  "status": "implemented",
+  "notes": "Coexists with mal/budget_v1_0.py (MAL-level caps). C15 adds task-level profiles, SLA enforcement (60/80/100% thresholds), budget-aware routing signals for C1, and reliability overhead accounting."
+}

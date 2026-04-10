@@ -1,0 +1,21 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "conformance.drift_event",
+  "version": "1.0",
+  "description": "A detected deviation between spec and runtime behavior.",
+  "fields": {
+    "drift_event_id": {"type": "string", "required": true},
+    "timestamp": {"type": "string", "required": true},
+    "drift_type": {"type": "enum", "required": true, "enum_values": ["CODE_SPEC_MISMATCH", "ARCH_BOUNDARY_VIOLATION", "ORPHAN_ARTIFACT", "INVARIANT_NOT_VERIFIED", "RTM_COVERAGE_GAP", "PROTO_VIOLATION", "TRUST_ESCALATION", "LOCK_PRIORITY_VIOLATION", "LOOP_HANDLING_FAILURE", "AUDIT_GAP", "UNSPECIFIED_BEHAVIOR"]},
+    "severity": {"type": "enum", "required": true, "enum_values": ["info", "warning", "critical"]},
+    "description": {"type": "string", "required": true},
+    "component_id": {"type": "string", "required": false, "default": ""},
+    "requirement_ids": {"type": "list", "required": false, "default": [], "items_type": "string"},
+    "invariant_ids": {"type": "list", "required": false, "default": [], "items_type": "string"},
+    "evidence_trace_ids": {"type": "list", "required": false, "default": [], "items_type": "string"},
+    "auto_action_taken": {"type": "enum", "required": true, "enum_values": ["none", "alert", "kill", "rollback"]},
+    "status": {"type": "enum", "required": true, "enum_values": ["open", "acknowledged", "mitigated"]},
+    "baseline_id": {"type": "string", "required": false, "default": ""}
+  },
+  "required": ["drift_event_id", "timestamp", "drift_type", "severity", "description", "auto_action_taken", "status"]
+}

@@ -1,0 +1,115 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ironframe"
+version = "0.1.0"
+description = "Infrastructure reliability layer for LLM-powered systems"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Brian Carter" },
+]
+keywords = [
+    "llm",
+    "reliability",
+    "governance",
+    "compliance",
+    "ai-safety",
+    "audit",
+    "hipaa",
+    "finra",
+    "soc2",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Healthcare Industry",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "anthropic>=0.40.0",
+]
+
+[project.optional-dependencies]
+openai = ["openai>=1.0.0"]
+z3 = ["z3-solver"]
+all = [
+    "openai>=1.0.0",
+    "z3-solver",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "ruff",
+    "mypy",
+    "build",
+]
+
+[project.urls]
+Homepage = "https://github.com/briancarteraus/ironframe"
+Documentation = "https://github.com/briancarteraus/ironframe/tree/main/docs"
+Repository = "https://github.com/briancarteraus/ironframe"
+Issues = "https://github.com/briancarteraus/ironframe/issues"
+Changelog = "https://github.com/briancarteraus/ironframe/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ironframe"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/ironframe",
+    "tests",
+    "docs",
+    "examples",
+    "SPEC.md",
+    "constitution.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "LICENSE",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+    "integration: marks tests as requiring live API access (deselect with '-m \"not integration\"')",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+# v0.1.0: only catch real bugs (pyflakes + syntax errors).
+# Formatting/style rules can be added incrementally post-launch.
+select = ["F", "E9"]
+ignore = [
+    "F401",  # unused imports -- many intentional re-exports in __init__ files
+    "F403",  # star imports -- used in backwards-compat shims
+    "F405",  # names from star imports -- same
+    "F541",  # f-string without placeholders -- cleanup debt, tracked for v0.2.0
+    "F841",  # unused local variable -- cleanup debt, tracked for v0.2.0
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["F"]  # tests can have unused fixtures/imports
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = false
+warn_unused_configs = true
+ignore_missing_imports = true
+check_untyped_defs = true

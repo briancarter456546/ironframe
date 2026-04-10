@@ -1,0 +1,15 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "tool.call.envelope",
+  "version": "1.0",
+  "description": "Generic governance envelope for all tool calls. Layer 1 validation.",
+  "fields": {
+    "tool_id": {"type": "string", "required": true, "description": "Registered tool identifier"},
+    "version": {"type": "string", "required": false, "default": "", "description": "Requested tool version"},
+    "caller_id": {"type": "string", "required": true, "description": "Identity of the calling agent or session"},
+    "session_id": {"type": "string", "required": true, "description": "Session context for this call"},
+    "resource_id": {"type": "string", "required": false, "default": "", "description": "Resource to lock (if applicable)"},
+    "params": {"type": "dict", "required": true, "description": "Tool-specific parameters (validated separately by per-tool schema)"}
+  },
+  "required": ["tool_id", "caller_id", "session_id", "params"]
+}

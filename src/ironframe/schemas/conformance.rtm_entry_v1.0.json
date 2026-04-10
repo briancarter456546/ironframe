@@ -1,0 +1,18 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "conformance.rtm_entry",
+  "version": "1.0",
+  "description": "A single requirement in the Requirements Traceability Matrix.",
+  "fields": {
+    "requirement_id": {"type": "string", "required": true},
+    "description": {"type": "string", "required": true},
+    "type": {"type": "enum", "required": true, "enum_values": ["functional", "nonfunctional", "compliance", "safety"]},
+    "status": {"type": "enum", "required": true, "enum_values": ["proposed", "accepted", "deprecated"]},
+    "source": {"type": "enum", "required": true, "enum_values": ["regulation", "internal_policy", "architecture"]},
+    "component_ids": {"type": "list", "required": true, "items_type": "string"},
+    "implementation_artifacts": {"type": "list", "required": true, "items_type": "string"},
+    "verification_artifacts": {"type": "list", "required": true, "items_type": "string"},
+    "compliance_refs": {"type": "list", "required": false, "default": [], "items_type": "string"}
+  },
+  "required": ["requirement_id", "description", "type", "status", "source", "component_ids", "implementation_artifacts", "verification_artifacts"]
+}

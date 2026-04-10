@@ -1,0 +1,19 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "coordination.trace.halt_event",
+  "version": "1.0",
+  "description": "Trace event for coordination halts.",
+  "fields": {
+    "event_id": {"type": "string", "required": true},
+    "event_type": {"type": "enum", "required": true, "enum_values": ["coordination_halt"]},
+    "component_id": {"type": "enum", "required": true, "enum_values": ["C14"]},
+    "timestamp": {"type": "string", "required": true},
+    "scenario_id": {"type": "string", "required": true},
+    "halt_reason": {"type": "enum", "required": true, "enum_values": ["LOOP_DETECTED", "OPERATOR_STOP", "ANOMALY", "TRUST_VIOLATION"]},
+    "initiated_by": {"type": "string", "required": true},
+    "affected_agents": {"type": "list", "required": true, "items_type": "string"},
+    "affected_subtasks": {"type": "list", "required": true, "items_type": "string"},
+    "audit_logged": {"type": "bool", "required": true}
+  },
+  "required": ["event_id", "event_type", "component_id", "timestamp", "scenario_id", "halt_reason", "initiated_by", "affected_agents", "affected_subtasks", "audit_logged"]
+}

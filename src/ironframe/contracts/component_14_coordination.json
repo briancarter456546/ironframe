@@ -1,0 +1,97 @@
+{
+  "component_id": "C14",
+  "name": "Agent Coordination Protocol",
+  "version": "1.0",
+  "purpose": "Structured multi-agent orchestration replacing freeform natural-language coordination with a typed, schema-validated, auditable protocol.",
+  "requires_components": ["C7", "C12", "C13", "C16", "C17"],
+  "owned_requirements": {
+    "IF-REQ-004": "Structured multi-agent coordination via typed protocol",
+    "IF-REQ-004A": "No trust escalation via inter-agent messaging",
+    "IF-REQ-004B": "Shared resource serialization by task graph priority",
+    "IF-REQ-004C": "Loop detection and coordination halt",
+    "IF-REQ-004D": "Auditable handoffs and orchestrator acknowledgments"
+  },
+  "invariants": [
+    {
+      "id": "INV-C14-TRUST-001",
+      "description": "Receiving agent effective tier = min(receiver_tier, sender_trust_tier). No trust escalation through messaging.",
+      "applies_to": "messages_v1_0.py:AgentMessage.effective_tier_for_receiver",
+      "severity": "critical",
+      "check_expression": "effective_tier <= sender_trust_tier AND effective_tier <= receiver_tier",
+      "required_evidence": "CoordinationMessageEvent.effective_tier field in audit trace"
+    },
+    {
+      "id": "INV-C14-LOCK-001",
+      "description": "Shared resource lock priority = task graph critical path priority, then assignment timestamp. Never arrival-time ordering.",
+      "applies_to": "resources_v1_0.py:ResourceCoordinator.request_resource",
+      "severity": "high",
+      "check_expression": "granted_agent.graph_priority >= queued_agent.graph_priority OR (equal_priority AND granted_agent.assigned_at <= queued_agent.assigned_at)",
+      "required_evidence": "ResourceLockEvent.graph_priority + queue_position in audit trace"
+    },
+    {
+      "id": "INV-C14-PROTO-001",
+      "description": "All inter-agent messages are C16-schema-validated typed envelopes. Freeform NL is not a valid coordination mechanism.",
+      "applies_to": "messages_v1_0.py:AgentMessage",
+      "severity": "critical",
+      "check_expression": "message_schema_validated == true for every dispatched message",
+      "required_evidence": "CoordinationMessageEvent.audit_logged == true"
+    },
+    {
+      "id": "INV-C14-LOOP-001",
+      "description": "Identical assignments exceeding threshold trigger HALT. Circular query patterns trigger HALT.",
+      "applies_to": "loops_v1_0.py:LoopDetector",
+      "severity": "high",
+      "check_expression": "repeat_count > threshold => disposition == HALT",
+      "required_evidence": "LoopDetectedEvent + CoordinationHaltEvent in audit trace"
+    },
+    {
+      "id": "INV-C14-AUDIT-001",
+      "description": "Every assignment, result, escalation, halt, and lock event is logged to C7 before the operation completes.",
+      "applies_to": "protocol_v1_0.py:CoordinationProtocol",
+      "severity": "critical",
+      "check_expression": "audit_logged == true for all emitted events",
+      "required_evidence": "Matching C7 audit log entries for every coordination trace event"
+    }
+  ],
+  "emitted_events": [
+    "CoordinationMessageEvent",
+    "ResourceLockEvent",
+    "LoopDetectedEvent",
+    "CoordinationHaltEvent"
+  ],
+  "code_modules": [
+    "ironframe/coordination/roles_v1_0.py",
+    "ironframe/coordination/messages_v1_0.py",
+    "ironframe/coordination/tasks_v1_0.py",
+    "ironframe/coordination/handoff_v1_0.py",
+    "ironframe/coordination/loops_v1_0.py",
+    "ironframe/coordination/resources_v1_0.py",
+    "ironframe/coordination/protocol_v1_0.py"
+  ],
+  "verification": {
+    "required_unit_tests": [
+      "role_registration_and_capability_check",
+      "message_effective_tier_computation",
+      "task_graph_topological_sort",
+      "circular_dependency_rejection",
+      "handoff_requires_orchestrator_ack",
+      "loop_detection_repeat_assignment",
+      "loop_detection_circular_query",
+      "resource_lock_graph_priority"
+    ],
+    "required_integration_tests": [
+      "full_decompose_assign_execute_handoff_flow",
+      "multi_agent_shared_resource_serialization",
+      "trust_propagation_across_message_chain"
+    ],
+    "required_eval_scenarios": [
+      "c14-multi-agent-clean"
+    ]
+  },
+  "deferred_scope": [
+    "Orchestrator election in leaderless multi-agent setups",
+    "Partial failure compensation patterns (saga/compensation actions)",
+    "Cross-session long-horizon coordination",
+    "Dynamic sub-task rebalancing"
+  ]
+}

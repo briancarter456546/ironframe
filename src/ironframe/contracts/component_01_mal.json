@@ -1,0 +1,26 @@
+{
+  "component_id": 1,
+  "name": "Model Abstraction Layer",
+  "version": "1.0",
+  "owns": "Provider abstraction, capability routing, fallback chains, token accounting",
+  "inputs": ["normalized_prompts", "tool_config", "budget_constraints", "routing_metadata"],
+  "outputs": ["model_responses", "token_usage", "provider_metadata", "routing_events"],
+  "must_never": [
+    "Decide truth",
+    "Bypass grounding (Component 10)",
+    "Bypass output validation",
+    "Bypass budget checks (Component 15)"
+  ],
+  "depends_on": [9, 10, 15, 16],
+  "failure_modes": ["wrong_model_routing", "budget_overruns", "provider_mismatch"],
+  "code_modules": [
+    "ironframe/mal/client_v1_0.py",
+    "ironframe/mal/router_v1_0.py",
+    "ironframe/mal/budget_v1_0.py",
+    "ironframe/mal/adapters/anthropic_v1_0.py",
+    "ironframe/mal/adapters/perplexity_v1_0.py"
+  ],
+  "rtm_requirements": ["IF-REQ-001"],
+  "status": "implemented",
+  "notes": "Client, router, budget, Anthropic+Perplexity adapters built and tested. Dependencies on 9, 10, 16 not yet enforced (components not built)."
+}

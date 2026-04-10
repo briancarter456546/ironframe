@@ -1,0 +1,19 @@
+{
+  "component_id": 2,
+  "name": "Skill Registry & Loader",
+  "version": "1.0",
+  "owns": "Skill catalog, versioning, dependency declarations, tiered skill loading",
+  "inputs": ["task_classification", "session_state", "skill_activation_request"],
+  "outputs": ["active_skill_set", "skill_contract_metadata", "dependency_graph"],
+  "must_never": [
+    "Load unversioned or uncontracted skills"
+  ],
+  "depends_on": [3, 4, 16, 18],
+  "failure_modes": ["wrong_skill_activation", "oversized_skill_load", "stale_skill_version"],
+  "code_modules": [
+    "ironframe/skills/registry_v1_0.py"
+  ],
+  "rtm_requirements": ["IF-REQ-010"],
+  "status": "implemented",
+  "notes": "Registry scans 28 skills, validates, resolves dependencies. Contract/RTM linkage enforcement not yet active (Component 18 not built)."
+}

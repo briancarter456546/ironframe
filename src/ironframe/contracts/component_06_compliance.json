@@ -1,0 +1,20 @@
+{
+  "component_id": 6,
+  "name": "Compliance Adapter Layer",
+  "version": "1.0",
+  "owns": "Protocol-specific enforcement bundles for HIPAA, FINRA, FDC, SOC2, etc.",
+  "inputs": ["active_compliance_profile", "workflow_actions", "data_classification"],
+  "outputs": ["compliance_validations", "policy_requirements", "blocking_decisions"],
+  "must_never": [
+    "Alter core architecture rules silently"
+  ],
+  "depends_on": [4, 7, 11, 16, 18],
+  "failure_modes": ["missing_control_mapping", "outdated_regulation_logic", "false_pass"],
+  "code_modules": [
+    "ironframe/compliance/base_v1_0.py",
+    "ironframe/compliance/audit_requirements_v1_0.py"
+  ],
+  "rtm_requirements": ["IF-REQ-005"],
+  "status": "partial",
+  "notes": "Base adapter class and HIPAA/FINRA/SOC2 audit requirements documented. Actual enforcement adapters (hipaa_v1_0.py, finra_v1_0.py) not yet built."
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "mal.stream.final",
+  "version": "1.0",
+  "description": "Final summary from IronFrameClient.stream() after all chunks",
+  "fields": {
+    "type": {"type": "enum", "required": true, "enum_values": ["final"], "description": "Always 'final' for stream summary"},
+    "text": {"type": "string", "required": true, "description": "Full concatenated text"},
+    "model": {"type": "string", "required": true, "description": "Model ID"},
+    "provider": {"type": "string", "required": true, "description": "Provider name"},
+    "tokens_in": {"type": "int", "required": false, "default": 0, "constraints": {"min": 0}},
+    "tokens_out": {"type": "int", "required": false, "default": 0, "constraints": {"min": 0}},
+    "cost_usd": {"type": "float", "required": true, "constraints": {"min": 0.0}},
+    "stop_reason": {"type": "string", "required": false},
+    "preference": {"type": "string", "required": false},
+    "session_id": {"type": "string", "required": false}
+  },
+  "required": ["type", "text", "model", "provider", "cost_usd"]
+}

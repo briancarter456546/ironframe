@@ -1,0 +1,15 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "context.budget.output",
+  "version": "1.0",
+  "description": "Final context package output from C9 before reaching C1 (MAL). Governed boundary.",
+  "fields": {
+    "zones": {"type": "list", "required": true, "description": "Ordered list of zone dicts with zone_type, position, token_count, trust_tier, compressed, chunks", "items_type": "dict"},
+    "protection_zones_intact": {"type": "bool", "required": true, "description": "Must be true for governed boundary pass"},
+    "current_task_position": {"type": "int", "required": true, "description": "Must equal len(zones)-1 (last position)"},
+    "total_tokens": {"type": "int", "required": true, "constraints": {"min": 0}},
+    "budget_utilization": {"type": "float", "required": true, "constraints": {"min": 0.0, "max": 1.5}, "description": "0.0-1.0 normal, up to 1.5 allows slight overflow before escalation"},
+    "trust_violations": {"type": "int", "required": true, "constraints": {"min": 0, "max": 0}, "description": "Must be 0 to pass governed boundary"}
+  },
+  "required": ["zones", "protection_zones_intact", "current_task_position", "total_tokens", "budget_utilization", "trust_violations"]
+}

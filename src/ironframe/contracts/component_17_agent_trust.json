@@ -1,0 +1,29 @@
+{
+  "component_id": 17,
+  "name": "Agent Trust & Containment",
+  "version": "1.0",
+  "owns": "Zero-trust agent identity, autonomy tiers, anomaly detection, containment, provenance trust propagation",
+  "inputs": ["agent_actions", "behavioral_telemetry", "identity_tokens", "session_policies"],
+  "outputs": ["attestation_status", "anomaly_scores", "kill_or_constrain_decisions", "provenance_tags"],
+  "must_never": [
+    "Treat agents as trusted simply because they are internal",
+    "Allow model assertions to self-elevate autonomy tier",
+    "Allow kill switch to be blocked by model reasoning",
+    "Allow provenance tags to be stripped or modified by agents",
+    "Duplicate permission logic outside permissions_v1_0.py"
+  ],
+  "depends_on": [4, 7, 12, 14, 18],
+  "failure_modes": ["internal_drift", "stealth_privilege_creep", "rogue_agent_propagation", "self_elevation"],
+  "code_modules": [
+    "ironframe/agent_trust/tiers_v1_0.py",
+    "ironframe/agent_trust/identity_v1_0.py",
+    "ironframe/agent_trust/kill_switch_v1_0.py",
+    "ironframe/agent_trust/anomaly_v1_0.py",
+    "ironframe/agent_trust/permissions_v1_0.py",
+    "ironframe/agent_trust/provenance_v1_0.py",
+    "ironframe/agent_trust/engine_v1_0.py"
+  ],
+  "rtm_requirements": ["IF-REQ-004"],
+  "status": "implemented",
+  "notes": "HMAC-SHA256 session tokens (single source of truth for tier/role). 4 autonomy tiers with explicit blast radius. Zero-dependency kill switch (4 callers: C4, C5, C18, operator). permissions_v1_0.py is the SINGLE authority for all permission decisions. Self-elevation attempts always logged as anomaly."
+}

@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-04-05",
+  "source": "iron_frame_executable_spec_v1",
+  "requirements": [
+    {
+      "id": "IF-REQ-001",
+      "promise": "Trustworthy",
+      "statement": "All critical enforcement must run outside the model context",
+      "components": ["4"],
+      "code_modules": ["ironframe/hooks/engine_v1_0.py"],
+      "tests": [],
+      "hooks": ["pre_execution", "post_execution", "completion_gate"],
+      "audit_evidence": "hook_event_log",
+      "status": "implemented",
+      "notes": "Hook engine built. Bash hooks also exist for Claude Code sessions."
+    },
+    {
+      "id": "IF-REQ-002",
+      "promise": "Accurate",
+      "statement": "Domain-specific answers must use KB or graph grounding",
+      "components": ["10"],
+      "code_modules": [],
+      "tests": [],
+      "hooks": [],
+      "audit_evidence": "provenance_tags",
+      "status": "not_started",
+      "notes": "Component 10 (KB Grounding Layer) not yet built. Phase 2 priority 5."
+    },
+    {
+      "id": "IF-REQ-003",
+      "promise": "Reliable",
+      "statement": "No completion without completion gate",
+      "components": ["4"],
+      "code_modules": ["ironframe/hooks/engine_v1_0.py", "ironframe/state/phase_v1_0.py"],
+      "tests": [],
+      "hooks": ["completion_gate"],
+      "audit_evidence": "completion_gate_records",
+      "status": "implemented",
+      "notes": "Hook engine supports completion_gate event. Phase gate enforces sequencing."
+    },
+    {
+      "id": "IF-REQ-004",
+      "promise": "Trustworthy",
+      "statement": "Agents are untrusted by default and minimally privileged",
+      "components": ["17"],
+      "code_modules": [],
+      "tests": [],
+      "hooks": [],
+      "audit_evidence": "identity_auth_events",
+      "status": "not_started",
+      "notes": "Component 17 (Agent Trust & Containment) not yet built. Phase 2 priority 6."
+    },
+    {
+      "id": "IF-REQ-005",
+      "promise": "Diligent",
+      "statement": "Every governed task produces immutable audit evidence",
+      "components": ["7"],
+      "code_modules": [
+        "ironframe/audit/schema_v1_0.py",
+        "ironframe/audit/logger_v1_0.py",
+        "ironframe/audit/stream_logger_v1_0.py"
+      ],
+      "tests": [],
+      "hooks": [],
+      "audit_evidence": "append_only_records",
+      "status": "implemented",
+      "notes": "Audit log built and tested. Compliance-ready schema. Needs provenance expansion."
+    },
+    {
+      "id": "IF-REQ-006",
+      "promise": "Reliable",
+      "statement": "Tool calls must pass schema and governance checks",
+      "components": ["12", "16"],
+      "code_modules": [],
+      "tests": [],
+      "hooks": [],
+      "audit_evidence": "tool_validation_log",
+      "status": "not_started",
+      "notes": "Components 12 (Tool Governance) and 16 (Schema Enforcement) not yet built. Phase 2 priorities 1-2."
+    },
+    {
+      "id": "IF-REQ-007",
+      "promise": "Accurate",
+      "statement": "Model outputs conflicting with KB truth must trigger arbitration",
+      "components": ["10", "18"],
+      "code_modules": [],
+      "tests": [],
+      "hooks": [],
+      "audit_evidence": "arbitration_events",
+      "status": "not_started",
+      "notes": "Components 10 and 18 not yet built."
+    },
+    {
+      "id": "IF-REQ-008",
+      "promise": "Trustworthy",
+      "statement": "Prompt injection and hostile inputs must be filtered before execution",
+      "components": ["11"],
+      "code_modules": [],
+      "tests": [],
+      "hooks": [],
+      "audit_evidence": "threat_classification_log",
+      "status": "not_started",
+      "notes": "Component 11 (Security / Injection Defense) not yet built. Phase 2 priority 3."
+    },
+    {
+      "id": "IF-REQ-009",
+      "promise": "Reliable",
+      "statement": "Runtime behavior must match declared workflow contracts",
+      "components": ["18"],
+      "code_modules": [],
+      "tests": [],
+      "hooks": [],
+      "audit_evidence": "drift_event_stream",
+      "status": "not_started",
+      "notes": "Component 18 (Spec Conformance & Drift Engine) not yet built. Phase 2 priority 9."
+    },
+    {
+      "id": "IF-REQ-010",
+      "promise": "Diligent",
+      "statement": "Every active skill, tool, and control must trace to a requirement",
+      "components": ["18"],
+      "code_modules": [],
+      "tests": [],
+      "hooks": [],
+      "audit_evidence": "conformance_report",
+      "status": "not_started",
+      "notes": "RTM created (this file). Component 18 will read it for conformance checks."
+    }
+  ]
+}

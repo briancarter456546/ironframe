@@ -1,0 +1,14 @@
+{
+  "$schema": "ironframe/io-schema/1.0",
+  "schema_id": "kb.retrieval.result",
+  "version": "1.0",
+  "description": "Result from KB retrieval, formatted as trust-tiered grounded chunks for C9",
+  "fields": {
+    "chunks": {"type": "list", "required": true, "description": "List of GroundedChunk dicts", "items_type": "dict"},
+    "total_results": {"type": "int", "required": true, "constraints": {"min": 0}},
+    "governed": {"type": "bool", "required": true, "description": "Whether governed scope was applied"},
+    "mode": {"type": "enum", "required": true, "enum_values": ["semantic", "graph", "hybrid"]},
+    "query": {"type": "string", "required": true}
+  },
+  "required": ["chunks", "total_results", "governed", "mode", "query"]
+}

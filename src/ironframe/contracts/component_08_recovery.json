@@ -1,0 +1,20 @@
+{
+  "component_id": 8,
+  "name": "Error Recovery & Resilience Engine",
+  "version": "1.0",
+  "owns": "Retries, rollbacks, graceful degradation, circuit breakers",
+  "inputs": ["failures", "timeouts", "budget_breaches", "schema_errors", "anomaly_alerts"],
+  "outputs": ["retry_path", "degraded_mode", "rollback", "halt_decision"],
+  "must_never": [
+    "Hide failures from the audit log"
+  ],
+  "depends_on": [3, 7, 12, 15, 16, 17],
+  "failure_modes": ["retry_storms", "unsafe_fallback", "unrecoverable_loop"],
+  "code_modules": [
+    "ironframe/recovery/circuit_breaker_v1_0.py",
+    "ironframe/recovery/retry_v1_0.py"
+  ],
+  "rtm_requirements": [],
+  "status": "implemented",
+  "notes": "Circuit breaker with closed/open/half-open states. Retry with variation (temp, model, phrasing). Error classification (rate_limit, content_policy, timeout)."
+}

@@ -1,0 +1,35 @@
+{
+  "component_id": 10,
+  "name": "KB Grounding Layer",
+  "version": "1.0",
+  "owns": "Retrieval, grounding, freshness checks, grounding provenance, truth arbitration, write governance",
+  "inputs": ["question_intent", "domain_scope", "state_context", "graph_queries"],
+  "outputs": ["grounded_context", "entity_references", "freshness_flags", "arbitration_events"],
+  "must_never": [
+    "Let model priors silently replace Canonical or Authoritative Domain truth",
+    "Ground a governed claim from Analytical or Ephemeral source class",
+    "Discard freshness metadata during retrieval or compression",
+    "Mutate Canonical entities without explicit human approval flag",
+    "Release flagged output if arbitration audit write fails"
+  ],
+  "depends_on": [7, 9, 11, 15, 16, 18],
+  "failure_modes": ["stale_kb_use", "bad_retrieval", "wrong_trust_arbitration", "write_governance_bypass"],
+  "code_modules": [
+    "ironframe/kb/storage_v1_0.py",
+    "ironframe/kb/freshness_v1_0.py",
+    "ironframe/kb/retrieval_v1_0.py",
+    "ironframe/kb/grounding_v1_0.py",
+    "ironframe/kb/write_v1_0.py",
+    "ironframe/kb/arbitration_v1_0.py",
+    "ironframe/kb/policy_v1_0.py",
+    "ironframe/kb/migration_v1_0.py",
+    "ironframe/kb/manager_v1_0.py"
+  ],
+  "schema_files": [
+    "ironframe/schemas/kb.retrieval.query_v1.0.json",
+    "ironframe/schemas/kb.retrieval.result_v1.0.json"
+  ],
+  "rtm_requirements": ["IF-REQ-002", "IF-REQ-007"],
+  "status": "implemented",
+  "notes": "SQLite vector+graph store. HashEmbedder for v1 (MiniLM pluggable). Cosine similarity Python-side with numpy. max_hops configurable (default=3). Arbitration write-before-release enforced. Migration bridge with review gate."
+}
