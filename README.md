@@ -46,8 +46,7 @@ pip install "ironframe[all]"      # Everything
 ## Quickstart
 
 ```python
-from ironframe import IronFrameConfig
-from ironframe.mal.client_v1_0 import IronFrameClient
+from ironframe import IronFrameConfig, IronFrameClient
 
 config = IronFrameConfig.from_env()
 client = IronFrameClient(config)

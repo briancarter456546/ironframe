@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-04-20
+
+### Fixed
+
+- **Top-level import path.** `from ironframe import IronFrameClient` now
+  works, matching the import pattern every 2026-era SDK ships with. In
+  0.1.1 readers had to type `from ironframe.mal.client_v1_0 import
+  IronFrameClient`, which is correct but surprising for a first-impression
+  quickstart. Both import paths continue to work.
+
+- **README quickstart.** Reduced to a single top-level import for the
+  common case.
+
+### Added
+
+- `IronFrameClient` re-exported at the top level of the `ironframe`
+  package (`ironframe/__init__.py`). Alongside `IronFrameConfig` and
+  `IronFrameResponse`, the three classes a typical user interacts with
+  are now all importable from `ironframe` directly.
+
+- `IronFrameResponse` re-exported at the top level for the same reason.
+
+### Unchanged
+
+- Long-form paths (`from ironframe.mal.client_v1_0 import
+  IronFrameClient`, `from ironframe.mal.response_v1_0 import
+  IronFrameResponse`) continue to work. Pure re-export; no breakage.
+
 ## [0.1.1] - 2026-04-19
 
 ### Fixed
@@ -88,6 +116,7 @@ Initial public release.
 
 - **Apache 2.0 core license** with explicit patent grant
 
-[Unreleased]: https://github.com/briancarter456546/ironframe/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/briancarter456546/ironframe/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/briancarter456546/ironframe/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/briancarter456546/ironframe/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/briancarter456546/ironframe/releases/tag/v0.1.0
