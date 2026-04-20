@@ -8,7 +8,7 @@ reasoning errors, context drift, bias, and incomplete process execution.
 Iron Frame is NOT domain logic. It is infrastructure.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "Brian Carter"
 
 from ironframe.config_v1_0 import IronFrameConfig

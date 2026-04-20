@@ -10,11 +10,13 @@
 # Usage:
 #   from ironframe.mal import get_client
 #   client = get_client()  # uses IronFrameConfig.from_env()
-#   result = client.complete('What is 2+2?', preference='fast')
-#   # result = {'text': '4', 'model': '...', 'cost_usd': 0.0001, ...}
+#   response = client.complete('What is 2+2?', preference='fast')
+#   # response is an IronFrameResponse -- supports BOTH attribute access
+#   # (response.content, response.cost, response.model) AND dict access
+#   # (response['text'], response.get('cost_usd')) for backward compat.
 #
 #   for chunk in client.stream('Tell me a story', preference='smart'):
-#       print(chunk['text'], end='')
+#       print(chunk['text'], end='')   # stream() still yields plain dicts
 # ============================================================================
 
 import uuid
@@ -23,6 +25,7 @@ from typing import Any, Dict, Generator, Optional
 from ironframe.config_v1_0 import IronFrameConfig
 from ironframe.mal.budget_v1_0 import BudgetTracker
 from ironframe.mal.router_v1_0 import ModelRouter
+from ironframe.mal.response_v1_0 import IronFrameResponse
 from ironframe.audit.logger_v1_0 import AuditLogger
 from ironframe.audit.stream_logger_v1_0 import StreamAuditLogger
 
@@ -91,8 +94,12 @@ class IronFrameClient:
         preference: str = "smart",
         max_tokens: int = 1024,
         temperature: float = 1.0,
-    ) -> Dict[str, Any]:
+    ) -> IronFrameResponse:
         """Synchronous completion with auto-routing, budget, and audit.
+
+        Returns an IronFrameResponse (subclass of dict). Access fields
+        either as attributes (response.content, response.cost, response.model)
+        or as dict keys (response['text'], response.get('cost_usd')).
 
         Write-before-release: the audit log is written before the result
         is returned to the caller.
@@ -134,7 +141,7 @@ class IronFrameClient:
         # Add routing metadata to result
         result["preference"] = preference
         result["session_id"] = self._session_id
-        return result
+        return IronFrameResponse(result)
 
     def stream(
         self,

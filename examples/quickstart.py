@@ -25,18 +25,19 @@ def main() -> None:
     client = IronFrameClient(config=config)
 
     # Make a call. "fast" routes to Haiku by default.
-    result = client.complete(
+    # response is an IronFrameResponse -- supports both attribute and dict access.
+    response = client.complete(
         prompt="What is the capital of France? Answer in one word.",
         preference="fast",
     )
 
     print("=== Iron Frame Quickstart ===")
-    print(f"Response:   {result.get('text', '').strip()}")
-    print(f"Model:      {result.get('model', 'unknown')}")
-    print(f"Cost USD:   ${result.get('cost_usd', 0.0):.6f}")
-    print(f"Tokens in:  {result.get('tokens_in', 0)}")
-    print(f"Tokens out: {result.get('tokens_out', 0)}")
-    print(f"Session:    {result.get('session_id', '')}")
+    print(f"Response:   {response.content.strip()}")
+    print(f"Model:      {response.model}")
+    print(f"Cost USD:   ${response.cost:.6f}")
+    print(f"Tokens in:  {response.tokens_in}")
+    print(f"Tokens out: {response.tokens_out}")
+    print(f"Session:    {response.session_id or ''}")
     print()
     print(f"Budget remaining: {client.budget.remaining()}")
     print()

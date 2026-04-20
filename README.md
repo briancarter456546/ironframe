@@ -54,15 +54,20 @@ client = IronFrameClient(config)
 
 response = client.complete(
     prompt="Summarize the key risks in this contract.",
-    capability="smart",
+    preference="smart",
 )
 
 print(response.content)
-print(f"Confidence: {response.confidence}")
 print(f"Cost: ${response.cost:.4f}")
+print(f"Model: {response.model}   Tokens: {response.tokens_in}/{response.tokens_out}")
 ```
 
-Every call is audited, budget-checked, and confidence-scored. See [`examples/`](examples/) for more.
+`response` is an `IronFrameResponse` — a `dict` subclass that supports
+both attribute access (`response.content`, `response.cost`, `response.model`)
+and dict access (`response["text"]`, `response.get("cost_usd")`). Every
+call is audited and budget-checked. Confidence scoring is a separate
+pass — run `sae.verify(response)` to populate `response.confidence`; raw
+MAL calls leave it as `None`. See [`examples/`](examples/) for more.
 
 ---
 

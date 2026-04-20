@@ -7,6 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-04-19
+
+### Fixed
+
+- **README quickstart accuracy.** `IronFrameClient.complete()` now returns an
+  `IronFrameResponse` instead of a plain `dict`, so the attribute-access
+  pattern documented in `README.md` (`response.content`, `response.cost`,
+  `response.model`) works. Previously the README and the code disagreed:
+  the README promised attributes, the code returned a dict, and a reader
+  copy-pasting the quickstart hit `AttributeError` in the first 30 seconds.
+
+- **README parameter name.** `client.complete()` uses `preference=`, not
+  `capability=`. The README's `capability="smart"` was wrong against the
+  actual signature; corrected in this release.
+
+### Added
+
+- `ironframe.mal.response_v1_0.IronFrameResponse` — a dict subclass with
+  attribute properties. Exposed at `ironframe.mal.IronFrameResponse`.
+  Canonical field access: `.text`, `.model`, `.provider`, `.tokens_in`,
+  `.tokens_out`, `.cost_usd`, `.stop_reason`, `.preference`, `.session_id`.
+  README-facing aliases: `.content` (→ text), `.cost` (→ cost_usd),
+  `.confidence` (returns None unless a separate SAE step has populated
+  it — raw MAL calls do not compute confidence; run `sae.verify()` to
+  score).
+
+- `IronFrameResponse.to_dict()` / `.raw` — return a plain-dict copy for
+  callers that want decoupled serialisation.
+
+- 18 new tests in `tests/test_mal_response.py` covering attribute access,
+  dict backward compatibility (`isinstance`, `[]`, `.get`, `in`, `keys`,
+  `items`, `json.dumps`, `**` unpacking), and to_dict round-trip copy
+  semantics.
+
+### Changed
+
+- **No breaking API changes for dict-using consumers.** Every existing
+  pattern (`response['text']`, `response.get('cost_usd')`,
+  `isinstance(response, dict)`, `json.dumps(response)`, `**response`)
+  continues to work unchanged because `IronFrameResponse` subclasses
+  `dict`. Internal MAL, SAE, eval, and recovery modules required zero
+  code changes.
+
+### Unchanged
+
+- `client.stream()` still yields plain dicts. The generator contract is
+  intentionally different from `complete()` and is not wrapped.
+
 ## [0.1.0] - 2026-04-10
 
 ### Added
@@ -40,5 +88,6 @@ Initial public release.
 
 - **Apache 2.0 core license** with explicit patent grant
 
-[Unreleased]: https://github.com/briancarter456546/ironframe/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/briancarter456546/ironframe/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/briancarter456546/ironframe/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/briancarter456546/ironframe/releases/tag/v0.1.0

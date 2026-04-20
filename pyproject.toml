@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ironframe"
-version = "0.1.0"
+version = "0.1.1"
 description = "Infrastructure reliability layer for LLM-powered systems"
 readme = "README.md"
 license = { text = "Apache-2.0" }
