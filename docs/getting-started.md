@@ -37,20 +37,22 @@ IRONFRAME_BUDGET_PER_DAY=25.00
 ## Your First Call
 
 ```python
-from ironframe.config_v1_0 import IronFrameConfig
-from ironframe.mal.client_v1_0 import IronFrameClient
+from ironframe import IronFrameConfig, IronFrameClient
 
 config = IronFrameConfig.from_env()
 client = IronFrameClient(config=config)
 
-result = client.complete(
+response = client.complete(
     prompt="Summarize the key risks in this contract.",
     preference="smart",
 )
 
-print(result["text"])
-print(f"Cost: ${result['cost_usd']:.4f}")
+print(response.content)
+print(f"Model: {response.model}")
+print(f"Cost: ${response.cost:.4f}")
 ```
+
+`response` is an `IronFrameResponse` — a `dict` subclass that supports both attribute access (`response.content`, `response.cost`, `response.model`) and dict access (`response["text"]`, `response.get("cost_usd")`). Both forms work identically; pick whichever reads better in your code.
 
 Behind the scenes, that one call:
 

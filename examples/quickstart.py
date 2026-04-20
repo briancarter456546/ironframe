@@ -10,8 +10,7 @@ Run:
     python examples/quickstart.py
 """
 
-from ironframe.config_v1_0 import IronFrameConfig
-from ironframe.mal.client_v1_0 import IronFrameClient
+from ironframe import IronFrameConfig, IronFrameClient
 
 
 def main() -> None:
