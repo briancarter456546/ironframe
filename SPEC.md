@@ -1,9 +1,16 @@
 # Iron Frame -- Canonical Specification
 
-**Version:** 1.1 | **Date:** 2026-04-08
+**Version:** 1.2 | **Date:** 2026-04-18
 **Status:** Authoritative. All implementation derives from this document.
 **Update Rule:** Spec changes travel with code changes. Every Phase completion
 requires a spec update before the next Phase begins.
+
+**Numbering note (1.2):** The § headers in "Core Components" below are content
+ordering only; the authoritative identifier for each component is the `(CN)`
+annotation, which matches `ironframe_dev/docs/BUILD_STATUS.md` exactly. From
+§1 through §9 the content order and C-number order diverge historically; §10
+onward they converge. Self-Audit Engine (SAE) has no BUILD_STATUS C-number
+and is tracked as a named component. See Issue #24 (reconciled 2026-04-18).
 
 ---
 
@@ -59,7 +66,7 @@ Tier escalation without budget ceiling is a production risk. Per-request, per-se
 
 ## Core Components
 
-### 1. Model Abstraction Layer (MAL)
+### 1. Model Abstraction Layer (MAL) (C1)
 
 The MAL is the only component that touches the LLM directly. It provides a normalized interface so all upstream components are model-agnostic.
 
@@ -73,7 +80,7 @@ The MAL is the only component that touches the LLM directly. It provides a norma
 
 **Key design note:** MAL does not perform validation or auditing. Its single job is clean, normalized communication with models. All quality guarantees happen in downstream components.
 
-### 2. Immutable Audit Log
+### 2. Immutable Audit Log (C7)
 
 The audit log is a write-once, append-only record of every significant event. It is the foundation of trust.
 
@@ -98,7 +105,7 @@ The audit log is a write-once, append-only record of every significant event. It
 
 **Storage roadmap:** JSONL for development and solo use. SQLite or Parquet for indexed queries at product volume. The schema is identical either way. (CriticMode correction: JSONL scaling.)
 
-### 3. Skill Registry & Loader
+### 3. Skill Registry & Loader (C2)
 
 Skills are knowledge modules -- structured documents that tell an agent what it needs to know for a specific category of work.
 
@@ -118,7 +125,7 @@ Skills are knowledge modules -- structured documents that tell an agent what it 
 | Domain | Application-specific | financial_analysis, research_methodology |
 | Protocol | Regulatory/external | HIPAA_adapter, FINRA_adapter, SOC2_adapter |
 
-### 4. State Machine / Session Manager
+### 4. State Machine / Session Manager (C3)
 
 Tracks where any given task or conversation is in its lifecycle.
 
@@ -131,7 +138,7 @@ Tracks where any given task or conversation is in its lifecycle.
 
 **Key design decision:** State files stay separate. The session coordinator reads/writes multiple backing stores but does NOT merge them into one file. Each keeps its own scope and failure domain. Corruption in one does not take out the others. (CriticMode correction: state unification fragility.)
 
-### 5. Hook Engine
+### 5. Hook Engine (C4)
 
 Hooks are deterministic enforcement gates that wrap every significant execution event. They run outside the LLM's reasoning loop.
 
@@ -152,7 +159,7 @@ Hooks are composable. Multiple hooks chain on the same event. Order is determini
 
 **Dual implementation:** Bash hooks for Claude Code sessions (existing pattern). Python-native hook engine for API/product workflows (no bash dependency).
 
-### 6. Self-Audit Engine (SAE)
+### 6. Self-Audit Engine (SAE, no BUILD_STATUS C-number)
 
 Iron Frame's continuous self-monitoring component.
 
@@ -178,7 +185,7 @@ Iron Frame's continuous self-monitoring component.
 
 **Budget enforcement:** Router checks `BudgetTracker` before escalating to a higher tier. If budget exhausted mid-escalation, returns best completed result plus confidence disclosure. Compliance adapters can set minimum tier floors (e.g., HIPAA analytical output = Tier 2+).
 
-### 7. Logic Skills
+### 7. Logic Skills (C5)
 
 Python modules that implement formal argumentation and reasoning validation. These serve double duty: Tier 0 prompt addenda for the SAE, and standalone Claude Code skills.
 
@@ -204,7 +211,7 @@ P2: [premise]
 ```
 Forces traceable reasoning chains where errors become visible.
 
-### 8. Compliance Adapter Layer (CAL)
+### 8. Compliance Adapter Layer (CAL) (C8)
 
 Pluggable protocol module. Iron Frame becomes "HIPAA-compliant" or "FINRA-compliant" by loading the appropriate adapter, not by baking regulatory logic into the core.
 
@@ -223,7 +230,7 @@ Each adapter is a **skill + hook bundle**:
 
 The audit schema (`schema_v1_0.py`) captures the union of these requirements from day 1. Compliance adapters interpret and enforce protocol-specific rules later, but the data is already there.
 
-### 9. Error Recovery & Resilience Engine
+### 9. Error Recovery & Resilience Engine (C6)
 
 LLMs fail in non-obvious ways -- not crashes, but silent degradations: partial answers, plausible-but-wrong outputs, truncated reasoning, context overflow.
 
@@ -517,12 +524,12 @@ ironframe/
     phase_v1_0.py                # Generic phase gate enforcement
   hooks/                         # Hook Engine (C4)
     engine_v1_0.py               # Programmatic hook registration + execution
-  sae/                           # Self-Audit Engine (C5)
+  sae/                           # Self-Audit Engine (SAE, no BUILD_STATUS C-number; SPEC.md §6)
     confidence_v1_0.py           # Generalized confidence scoring
     judge_v1_0.py                # LLM-as-judge (via MAL)
     cross_model_v1_0.py          # Cross-model verification (different family)
     tiers_v1_0.py                # Verification tier router with spend caps
-  logic/                         # Logic Skills (C6)
+  logic/                         # Logic Skills (C5)
     toulmin_v1_0.py              # Toulmin argument schema + validation
     cqot_v1_0.py                 # Critical Questions of Thought battery
     fallacy_v1_0.py              # 29+ fallacy taxonomy
@@ -530,7 +537,7 @@ ironframe/
     schema_v1_0.py               # AuditEvent dataclass -- compliance-ready
     logger_v1_0.py               # Append-only JSONL writer
     stream_logger_v1_0.py        # Streaming open/close pattern
-  recovery/                      # Error Recovery (C8)
+  recovery/                      # Error Recovery (C6)
     circuit_breaker_v1_0.py      # Error rate tracking + circuit open/close
     retry_v1_0.py                # Retry with variation
   context/                       # Context Manager (C9)
@@ -612,7 +619,7 @@ ironframe/
     static_checker_v1_0.py       # CI/CD gate
     runtime_monitor_v1_0.py      # Runtime invariant monitor
     drift_reporter_v1_0.py       # Baseline + drift differential
-  compliance/                    # Compliance Adapter Layer
+  compliance/                    # Compliance Adapter Layer (C8)
     base_v1_0.py                 # Base adapter contract
     audit_requirements_v1_0.py   # What HIPAA/FINRA/SOC2 demand of audit
   contracts/                     # Component contracts (JSON)

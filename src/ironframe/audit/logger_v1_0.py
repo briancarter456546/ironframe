@@ -31,14 +31,28 @@ class AuditLogger:
     Thread-safe. Writes are atomic per-event (single line append).
     Write-before-release: the log method writes to disk and flushes
     before returning. If the write fails, the caller gets the exception.
+
+    v1.0 C27 update: if a writer is injected (or one is resolved from
+    environment via ironframe.audit.writer_v1_0.writer_from_env), events
+    flow through that writer as well as the local file. This adds the
+    collector transport without breaking the local cache contract.
     """
 
-    def __init__(self, output_dir: str = "output/ironframe", filename: str = "audit.jsonl"):
+    def __init__(
+        self,
+        output_dir: str = "output/ironframe",
+        filename: str = "audit.jsonl",
+        writer=None,
+    ):
         self._output_dir = Path(output_dir)
         self._output_dir.mkdir(parents=True, exist_ok=True)
         self._filepath = self._output_dir / filename
         self._lock = threading.Lock()
         self._event_count = 0
+        # C27: optional AppendOnlyWriter. If None, we retain the legacy
+        # behaviour (local file write only) so existing callers see no
+        # change until they opt in.
+        self._writer = writer
 
     @property
     def filepath(self) -> Path:
@@ -78,12 +92,24 @@ class AuditLogger:
         return event
 
     def _append_line(self, line: str) -> None:
-        """Thread-safe append of a single line to the JSONL file."""
+        """Thread-safe append of a single line to the JSONL file.
+
+        C27: if a writer is attached, also hand the parsed event off to the
+        writer. Writer failure does not affect the local append -- this
+        matches the "local file = advisory cache" contract.
+        """
         with self._lock:
             with open(self._filepath, "a", encoding="utf-8") as f:
                 f.write(line + "\n")
                 f.flush()
             self._event_count += 1
+        if self._writer is not None:
+            try:
+                event_dict = json.loads(line)
+                self._writer.append(event_dict)
+            except Exception:
+                # Fail-graceful -- writer problems must not break logging.
+                pass
 
     def read_events(self, limit: int = 100) -> list:
         """Read recent events from the log (most recent last). For diagnostics."""
